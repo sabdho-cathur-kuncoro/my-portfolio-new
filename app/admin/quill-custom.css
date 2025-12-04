@@ -1,0 +1,37 @@
+/* Custom Rich Text Editor Styles for Dark Theme */
+
+.rich-text-editor-wrapper {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.rich-text-toolbar {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+}
+
+.toolbar-btn {
+  transition: all 0.2s;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.toolbar-btn:hover {
+  color: rgb(139, 92, 246);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.toolbar-btn:active {
+  transform: scale(0.95);
+}
+
+/* Textarea styles */
+.rich-text-editor-wrapper textarea {
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rich-text-editor-wrapper textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}

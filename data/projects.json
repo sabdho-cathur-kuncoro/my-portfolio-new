@@ -1,0 +1,32 @@
+[
+    {
+        "id": "1",
+        "title": "HRIS System",
+        "description": "Comprehensive Human Resource Information System with employee management, payroll, attendance tracking, and performance evaluation features built with Next.js and TypeScript.",
+        "image": "👥",
+        "tags": [
+            "Next.js",
+            "TypeScript",
+            "PostgreSQL",
+            "Prisma"
+        ],
+        "github": "https://github.com",
+        "demo": "/projects/hris",
+        "gradient": "from-accent-purple to-accent-pink"
+    },
+    {
+        "id": "2",
+        "title": "Mobile ERP System",
+        "description": "Enterprise Resource Planning mobile application for inventory management, sales tracking, and real-time reporting built exclusively with React Native for iOS and Android.",
+        "image": "📱",
+        "tags": [
+            "React Native",
+            "Redux",
+            "Firebase",
+            "REST API"
+        ],
+        "github": "https://github.com",
+        "demo": "/projects/mobile-erp",
+        "gradient": "from-accent-cyan to-accent-green"
+    }
+]
