@@ -2,7 +2,6 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { ExternalLink, Github } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import HTMLContent from '@/components/HTMLContent';
 
@@ -45,9 +44,7 @@ export default function Projects() {
             try {
                 const res = await fetch('/api/projects');
                 const data = await res.json();
-                // Ensure data is an array before setting state
                 if (Array.isArray(data)) {
-                    // Filter to show only featured projects on homepage
                     const featuredProjects = data.filter(project => project.is_featured);
                     setProjects(featuredProjects);
                 } else {
@@ -74,24 +71,26 @@ export default function Projects() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.6 }}
-                        className="text-center mb-16"
+                        className="mb-12"
                     >
+                        <p className="font-mono text-xs uppercase tracking-widest text-accent mb-4">
+                            03 — Projects
+                        </p>
                         <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                            Featured <span className="gradient-text">Projects</span>
+                            Featured Projects
                         </h2>
-                        <div className="w-20 h-1 bg-gradient-cyber mx-auto mb-6"></div>
-                        <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-                            A showcase of my recent work and side projects demonstrating my skills
-                            in mobile and web development.
+                        <p className="text-muted text-lg max-w-2xl">
+                            A showcase of recent work demonstrating my skills in mobile and
+                            web development.
                         </p>
                     </motion.div>
 
                     {/* Loading State */}
                     {isLoading && (
-                        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        <div className="grid md:grid-cols-3 gap-8">
                             {[1, 2, 3].map((i) => (
-                                <div key={i} className="glass rounded-2xl overflow-hidden animate-pulse">
-                                    <div className="h-48 bg-white/5"></div>
+                                <div key={i} className="surface rounded-lg overflow-hidden animate-pulse">
+                                    <div className="h-24 border-b border-white/10"></div>
                                     <div className="p-6 space-y-3">
                                         <div className="h-6 bg-white/5 rounded w-3/4"></div>
                                         <div className="h-4 bg-white/5 rounded w-full"></div>
@@ -105,68 +104,52 @@ export default function Projects() {
                     {/* Empty State */}
                     {!isLoading && projects.length === 0 && (
                         <div className="text-center py-20">
-                            <p className="text-6xl mb-4">📂</p>
-                            <p className="text-xl text-gray-400 mb-2">No featured projects yet</p>
-                            <p className="text-sm text-gray-500">Mark projects as featured in the admin panel to display them here</p>
+                            <p className="text-xl text-muted mb-2">No featured projects yet</p>
+                            <p className="text-sm text-muted">Mark projects as featured in the admin panel to display them here</p>
                         </div>
                     )}
 
-                    {/* Projects Grid - 3 Column Layout */}
+                    {/* Projects Grid */}
                     {!isLoading && projects.length > 0 && (
-                        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        <div className="grid md:grid-cols-3 gap-8">
                             {projects.map((project, index) => (
                                 <motion.div
                                     key={project.id || project.title}
                                     initial={{ opacity: 0, y: 30 }}
                                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                                    className="glass rounded-2xl overflow-hidden group hover:bg-white/10 transition-all cursor-pointer"
-                                    whileHover={{ y: -10 }}
+                                    className="surface rounded-lg overflow-hidden group hover:border-accent/40 transition-colors cursor-pointer"
+                                    whileHover={{ y: -4 }}
                                     onClick={() => router.push(project.demo)}
                                 >
-                                    {/* Project Image/Icon */}
-                                    <div className={`relative h-48 bg-gradient-to-br ${project.gradient} flex items-center justify-center overflow-hidden`}>
-                                        <motion.div
-                                            className="text-8xl"
-                                            whileHover={{ scale: 1.2, rotate: 10 }}
-                                            transition={{ duration: 0.3 }}
-                                        >
-                                            {project.image}
-                                        </motion.div>
-
-                                        {/* Status Badge */}
+                                    {/* Card Header */}
+                                    <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between">
+                                        <span className="font-mono text-3xl text-accent/60">
+                                            {String(index + 1).padStart(2, '0')}
+                                        </span>
                                         {project.status && project.status !== 'completed' && (
-                                            <div className="absolute top-3 right-3">
-                                                <span className="px-3 py-1 bg-black/50 backdrop-blur-sm rounded-full text-xs font-medium text-white capitalize">
-                                                    {project.status.replace('-', ' ')}
-                                                </span>
-                                            </div>
+                                            <span className="font-mono text-xs uppercase text-muted border border-white/10 rounded px-2 py-0.5 capitalize">
+                                                {project.status.replace('-', ' ')}
+                                            </span>
                                         )}
                                     </div>
 
                                     {/* Project Info */}
                                     <div className="p-6">
-                                        <h3 className="text-xl font-bold mb-2 group-hover:text-accent-cyan transition-colors">
+                                        <h3 className="text-xl font-bold mb-2 group-hover:text-accent transition-colors">
                                             {project.title}
                                         </h3>
 
                                         {/* Duration & Role */}
                                         {(project.duration || project.role) && (
-                                            <div className="flex flex-wrap gap-2 mb-3 text-xs text-gray-400">
-                                                {project.duration && (
-                                                    <span className="flex items-center gap-1">
-                                                        ⏱️ {project.duration}
-                                                    </span>
-                                                )}
-                                                {project.role && (
-                                                    <span className="flex items-center gap-1">
-                                                        👤 {project.role}
-                                                    </span>
-                                                )}
+                                            <div className="flex flex-wrap gap-x-3 gap-y-1 mb-3 font-mono text-xs text-muted">
+                                                {project.duration && <span>Duration: {project.duration}</span>}
+                                                {project.duration && project.role && <span>·</span>}
+                                                {project.role && <span>Role: {project.role}</span>}
                                             </div>
                                         )}
 
-                                        <div className="text-gray-400 text-sm mb-4 line-clamp-3">
+                                        <div className="text-muted text-sm mb-4 line-clamp-3">
                                             <HTMLContent content={project.description} />
                                         </div>
 
@@ -175,13 +158,13 @@ export default function Projects() {
                                             {project.tags.slice(0, 3).map((tag) => (
                                                 <span
                                                     key={tag}
-                                                    className="px-3 py-1 bg-white/5 rounded-full text-xs font-medium text-accent-cyan"
+                                                    className="px-3 py-1 border border-white/10 rounded-full text-xs text-muted"
                                                 >
                                                     {tag}
                                                 </span>
                                             ))}
                                             {project.tags.length > 3 && (
-                                                <span className="px-3 py-1 bg-white/5 rounded-full text-xs font-medium text-gray-400">
+                                                <span className="px-3 py-1 border border-white/10 rounded-full text-xs text-muted">
                                                     +{project.tags.length - 3}
                                                 </span>
                                             )}
@@ -191,26 +174,6 @@ export default function Projects() {
                             ))}
                         </div>
                     )}
-
-                    {/* View More */}
-                    {/* <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6, delay: 0.8 }}
-                        className="text-center mt-12"
-                    >
-                        <motion.a
-                            href="https://github.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-8 py-4 glass rounded-lg font-semibold hover:bg-white/10 transition-colors"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            <Github className="w-5 h-5" />
-                            View More on GitHub
-                        </motion.a>
-                    </motion.div> */}
                 </div>
             </div>
         </section>
