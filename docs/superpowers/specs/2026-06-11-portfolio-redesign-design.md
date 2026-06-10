@@ -30,22 +30,39 @@ reuse the same tokens later.
 `Projects` card; they remain in the type/schema for the (out-of-scope) detail
 page.
 
+## Token strategy: additive, not destructive
+
+`tailwind.config.js` and `app/globals.css` are shared by the landing page AND
+the out-of-scope pages (`/admin/*`, `/login`, `/projects/[slug]`,
+`ImageUpload`, `RichTextEditor`), which use `accent-purple`, `accent-cyan`,
+`accent-pink`, `accent-green`, `accent-orange`, `.glass`, `.glass-dark`,
+`.gradient-text`, `.bg-gradient-cyber`, and `animate-float` extensively.
+
+**None of these existing tokens/classes/keyframes are removed or renamed.**
+New tokens are added alongside them. The redesigned landing-page components
+simply stop using the old tokens/classes and use the new ones instead.
+
 ## Design tokens
 
 ### Colors (tailwind.config.js)
 
-Replace the `accent.{purple,pink,cyan,green,orange}` set and the
-`bg-gradient-cyber` / `gradient-purple` / `gradient-cyan` background images
-with:
+Add to the existing `theme.extend.colors`, without touching `background`,
+`foreground`, or the existing `accent.{purple,pink,cyan,green,orange}` keys:
 
-- `background`: `#0a0a0b` (near-black) — existing `--background` var, updated value
-- `surface`: `#131316` — new, for cards/panels
-- `border` color usage: `rgba(255,255,255,0.08)` (used directly as Tailwind
-  arbitrary value `border-white/10` or a `border` color token)
-- `foreground`: `#f2f2f0` — existing `--foreground` var, updated value
+- `surface`: `#131316` — new, for cards/panels (flat, no blur)
 - `muted`: `#8a8a8f` — new, secondary text
-- `accent`: `#34d399` (emerald-400) — single accent, used sparingly for
-  links, active states, CTAs, eyebrow numbers, hover highlights
+- `accent.DEFAULT`: `#34d399` (emerald-400) — added as the `DEFAULT` key
+  inside the existing `accent` object, so `accent-purple` etc. keep working
+  while `accent` alone (i.e. `text-accent`, `bg-accent`, `border-accent`,
+  with opacity modifiers like `bg-accent/90`) resolves to emerald. This is
+  the new redesign's single accent, used sparingly for links, active states,
+  CTAs, eyebrow numbers, hover highlights.
+
+`background`/`foreground` CSS var values (`--background: #0a0a0f`,
+`--foreground: #f5f5f7`) are left as-is — already near-black/off-white,
+no change needed.
+
+Borders use Tailwind's built-in `border-white/10` (not a new token).
 
 ### Typography
 
@@ -58,31 +75,44 @@ with:
 
 ### Surfaces
 
-- New `.surface` utility in `globals.css`: `background: var(--surface);
-  border: 1px solid rgba(255,255,255,0.08);` — no blur, no shadow, no
-  gradient. Replaces `.glass` and `.glass-dark` everywhere.
-- Nav scrolled state: `.surface`-equivalent (solid bg + bottom border)
-  instead of `.glass-dark` blur.
+- New `.surface` utility added to `globals.css` `@layer components`:
+  `@apply bg-surface border border-white/10;` — no blur, no shadow, no
+  gradient. Used by the redesigned components in place of `.glass`/
+  `.glass-dark` (those classes remain defined for other pages, just unused
+  by the new components).
+- Nav scrolled state: `bg-background border-b border-white/10` instead of
+  `.glass-dark` blur.
 
-### Removed from globals.css / tailwind.config.js
+### New additions to globals.css (additive only)
 
-- `.glass`, `.glass-dark`, `.gradient-text`, `.bg-gradient-cyber`
-- Keyframes/animations: `glow`, `float`, `gradient-shift`, `gradient-flow`
-  and their utility classes (`animate-float`, `animate-gradient-flow`,
-  `animate-glow`)
-- Body `radial-gradient` rainbow blob background — replace with flat
-  `background: var(--background)`, optionally one faint single radial
-  (white/grey, low opacity) near the top for subtle depth.
-- Scrollbar thumb gradient → solid `muted`/`accent` on hover.
-- `::selection` color → `accent` at low opacity instead of purple.
+- `--font-mono` fallback var added to `:root`, mirroring the existing
+  `--font-inter` pattern.
+- New `.surface` class (see above).
+- Scrollbar thumb: change from the purple/pink/cyan gradient to solid
+  `muted`, `accent` on hover. This is a shared, purely-decorative global
+  change (low risk for other pages).
+- `::selection`: change background color from purple-tinted to
+  `accent`-tinted (`rgba(52, 211, 153, 0.3)`). Shared, decorative, low risk.
+- Body `background-image` radial gradients: replace the four
+  purple/cyan/pink/green 10%-opacity corner radials with a single faint
+  white/grey radial (low opacity) near the top center, for subtle depth
+  without color. This is a shared change — `/admin` and `/login` already
+  layer their own colorful blur blobs on top, so this faint base-layer tint
+  swap is low-risk there.
+- `.html-content a` link color: change from cyan/purple to
+  `accent`/`foreground`. Shared with `/projects/[slug]` (also renders
+  `.html-content`) — cosmetic link-color-only change, low risk.
 
-### Kept
+### Kept (untouched)
 
-- `slideUp`/`slideDown`/`fadeIn` keyframes (used for scroll reveals) —
-  framer-motion variants stay as-is structurally, just no longer paired with
-  glow/gradient styling.
-- `.html-content` styles (project description rich text) — update link color
-  (`html-content a`) from cyan/purple to `accent`/`foreground`.
+- `.glass`, `.glass-dark`, `.gradient-text`, `.bg-gradient-cyber`,
+  `animate-float`, `animate-gradient-flow`, and the `glow`/`float`/
+  `gradient-shift`/`gradient-flow` keyframes all remain in
+  `globals.css`/`tailwind.config.js` exactly as they are — required by
+  `/admin/*`, `/login`, `/projects/[slug]`, `ImageUpload`, `RichTextEditor`.
+- `slideUp`/`slideDown`/`fadeIn` keyframes — untouched, not directly used by
+  framer-motion variants but kept as-is (no removal needed since nothing is
+  being deleted from the config).
 
 ## Component-by-component
 
@@ -242,18 +272,22 @@ Keep:
   accent.
 - WhatsApp FAB entrance spring + hover scale.
 
-Remove:
-- Floating blur blobs (Hero background, Contact CTA panel).
-- `animate-float`, `animate-gradient-flow`, `glow` keyframes/utilities.
-- `gradient-text` background-position animation.
-- Skills progress-bar width animation (bars removed entirely).
-- WhatsApp FAB pulsing ring loop.
+No longer used by the redesigned components (kept in config/globals.css for
+other pages, see "Token strategy" above):
+- Floating blur blobs (Hero background, Contact CTA panel) — markup deleted.
+- `animate-float`, `animate-gradient-flow`, `glow` keyframes/utilities —
+  config entries kept, just not referenced by new component markup.
+- `gradient-text` background-position animation — class kept, unused here.
+- Skills progress-bar width animation — bars removed from `Skills.tsx`
+  entirely.
+- WhatsApp FAB pulsing ring loop — markup deleted.
 
 ## Open implementation notes
 
 - `tailwind.config.js` has a typo key `'gradient-cy ber'` (with a space) in
-  `backgroundImage` — this whole `backgroundImage` block is being removed per
-  this redesign, so the typo is moot (no need to fix separately).
+  `backgroundImage` — this block is kept as-is for other pages (not part of
+  this redesign's scope); the typo is pre-existing and out of scope, leave
+  it alone.
 - Skills data array currently includes `icon` and `color` per category and
   `level` per skill — these fields become unused and should be removed from
   the array literal in `Skills.tsx` (not just unrendered), since nothing else
