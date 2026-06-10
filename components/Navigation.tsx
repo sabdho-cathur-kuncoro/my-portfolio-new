@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Menu, X, Code2 } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
@@ -21,7 +21,6 @@ export default function Navigation() {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
 
-            // Update active section based on scroll position
             const sections = navItems.map(item => item.href.substring(1));
             const current = sections.find(section => {
                 const element = document.getElementById(section);
@@ -50,44 +49,41 @@ export default function Navigation() {
         <motion.nav
             initial={{ y: -100 }}
             animate={{ y: 0 }}
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-dark py-4' : 'py-6'
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-background border-b border-white/10 py-4' : 'py-6'
                 }`}
         >
             <div className="container mx-auto px-6">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <motion.a
+                    <a
                         href="#home"
                         onClick={(e) => { e.preventDefault(); scrollToSection('#home'); }}
-                        className="flex items-center gap-2 text-2xl font-bold gradient-text"
-                        whileHover={{ scale: 1.05 }}
+                        className="font-mono text-lg font-bold text-foreground"
                     >
-                        <Code2 className="w-8 h-8" />
-                        <span>Sabdho.dev</span>
-                    </motion.a>
+                        sabdho.dev
+                    </a>
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center gap-8">
                         {navItems.map((item) => (
-                            <motion.a
+                            <a
                                 key={item.name}
                                 href={item.href}
                                 onClick={(e) => { e.preventDefault(); scrollToSection(item.href); }}
-                                className={`relative text-sm font-medium transition-colors ${activeSection === item.href.substring(1)
-                                    ? 'text-accent-purple'
-                                    : 'text-foreground hover:text-accent-cyan'
+                                className={`relative font-mono text-xs uppercase tracking-widest transition-colors ${activeSection === item.href.substring(1)
+                                    ? 'text-accent'
+                                    : 'text-muted hover:text-foreground'
                                     }`}
-                                whileHover={{ y: -2 }}
                             >
                                 {item.name}
                                 {activeSection === item.href.substring(1) && (
                                     <motion.div
                                         layoutId="activeSection"
-                                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-cyber"
+                                        className="absolute -bottom-1 left-0 right-0 h-px bg-accent"
                                         initial={false}
                                     />
                                 )}
-                            </motion.a>
+                            </a>
                         ))}
                     </div>
 
@@ -108,17 +104,17 @@ export default function Navigation() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="md:hidden mt-4 glass rounded-lg overflow-hidden"
+                            className="md:hidden mt-4 surface rounded-lg overflow-hidden"
                         >
-                            <div className="flex flex-col py-4">
+                            <div className="flex flex-col py-2">
                                 {navItems.map((item, index) => (
                                     <motion.a
                                         key={item.name}
                                         href={item.href}
                                         onClick={(e) => { e.preventDefault(); scrollToSection(item.href); }}
-                                        className={`px-6 py-3 text-sm font-medium transition-colors ${activeSection === item.href.substring(1)
-                                            ? 'text-accent-purple bg-white/5'
-                                            : 'text-foreground hover:bg-white/5'
+                                        className={`px-6 py-3 font-mono text-xs uppercase tracking-widest transition-colors ${activeSection === item.href.substring(1)
+                                            ? 'text-accent bg-white/5'
+                                            : 'text-muted hover:bg-white/5'
                                             }`}
                                         initial={{ x: -20, opacity: 0 }}
                                         animate={{ x: 0, opacity: 1 }}
