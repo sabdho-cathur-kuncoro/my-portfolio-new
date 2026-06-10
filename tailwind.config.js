@@ -10,7 +10,10 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        surface: '#131316',
+        muted: '#8a8a8f',
         accent: {
+          DEFAULT: '#34d399',
           purple: '#a855f7',
           pink: '#ec4899',
           cyan: '#06b6d4',
@@ -20,6 +23,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       animation: {
         'fade-in': 'fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
