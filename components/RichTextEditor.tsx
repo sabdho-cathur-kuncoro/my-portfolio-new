@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
+import { Link as LinkIcon } from 'lucide-react';
 import '../app/admin/quill-custom.css';
 
 interface RichTextEditorProps {
@@ -134,10 +135,11 @@ export default function RichTextEditor({
                 <button
                     type="button"
                     onClick={handleLink}
-                    className="toolbar-btn px-3 py-1.5 glass rounded hover:bg-white/10 transition-colors text-sm"
+                    className="toolbar-btn px-3 py-1.5 glass rounded hover:bg-white/10 transition-colors text-sm flex items-center gap-1.5"
                     title="Insert Link"
                 >
-                    🔗 Link
+                    <LinkIcon className="w-3.5 h-3.5" />
+                    <span>Link</span>
                 </button>
             </div>
 

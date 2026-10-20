@@ -65,26 +65,36 @@ export default function Navigation() {
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center gap-8">
-                        {navItems.map((item) => (
-                            <a
-                                key={item.name}
-                                href={item.href}
-                                onClick={(e) => { e.preventDefault(); scrollToSection(item.href); }}
-                                className={`relative font-mono text-xs uppercase tracking-widest transition-colors ${activeSection === item.href.substring(1)
-                                    ? 'text-accent'
-                                    : 'text-muted hover:text-foreground'
-                                    }`}
-                            >
-                                {item.name}
-                                {activeSection === item.href.substring(1) && (
-                                    <motion.div
-                                        layoutId="activeSection"
-                                        className="absolute -bottom-1 left-0 right-0 h-px bg-accent"
-                                        initial={false}
-                                    />
-                                )}
-                            </a>
-                        ))}
+                        <div className="flex items-center gap-8">
+                            {navItems.map((item) => (
+                                <a
+                                    key={item.name}
+                                    href={item.href}
+                                    onClick={(e) => { e.preventDefault(); scrollToSection(item.href); }}
+                                    className={`relative font-mono text-xs uppercase tracking-widest transition-colors ${activeSection === item.href.substring(1)
+                                        ? 'text-accent'
+                                        : 'text-muted hover:text-foreground'
+                                        }`}
+                                >
+                                    {item.name}
+                                    {activeSection === item.href.substring(1) && (
+                                        <motion.div
+                                            layoutId="activeSection"
+                                            className="absolute -bottom-1 left-0 right-0 h-px bg-accent"
+                                            initial={false}
+                                        />
+                                    )}
+                                </a>
+                            ))}
+                        </div>
+
+                        <a
+                            href="#contact"
+                            onClick={(e) => { e.preventDefault(); scrollToSection('#contact'); }}
+                            className="font-mono text-xs uppercase tracking-wider px-3.5 py-1.5 border border-accent/40 text-accent rounded-md hover:bg-accent hover:text-background transition-all"
+                        >
+                            Let&apos;s Talk
+                        </a>
                     </div>
 
                     {/* Mobile Menu Button */}

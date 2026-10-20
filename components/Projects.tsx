@@ -3,6 +3,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { ArrowUpRight } from 'lucide-react';
 import HTMLContent from '@/components/HTMLContent';
 
 interface Project {
@@ -74,14 +75,14 @@ export default function Projects() {
                         className="mb-12"
                     >
                         <p className="font-mono text-xs uppercase tracking-widest text-accent mb-4">
-                            03 — Projects
+                            03 / Projects
                         </p>
                         <h2 className="text-4xl md:text-5xl font-bold mb-4">
                             Featured Projects
                         </h2>
                         <p className="text-muted text-lg max-w-2xl">
-                            A showcase of recent work demonstrating my skills in mobile and
-                            web development.
+                            Selected projects spanning cross-platform mobile apps and internal
+                            enterprise systems, built with focus on architecture and performance.
                         </p>
                     </motion.div>
 
@@ -124,14 +125,19 @@ export default function Projects() {
                                 >
                                     {/* Card Header */}
                                     <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between">
-                                        <span className="font-mono text-3xl text-accent/60">
-                                            {String(index + 1).padStart(2, '0')}
-                                        </span>
-                                        {project.status && project.status !== 'completed' && (
-                                            <span className="font-mono text-xs uppercase text-muted border border-white/10 rounded px-2 py-0.5 capitalize">
-                                                {project.status.replace('-', ' ')}
+                                        <div className="flex items-center gap-3">
+                                            <span className="font-mono text-3xl text-accent/60 group-hover:text-accent transition-colors">
+                                                {String(index + 1).padStart(2, '0')}
                                             </span>
-                                        )}
+                                            {project.status && project.status !== 'completed' && (
+                                                <span className="font-mono text-xs uppercase text-muted border border-white/10 rounded px-2 py-0.5 capitalize">
+                                                    {project.status.replace('-', ' ')}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-muted group-hover:border-accent/40 group-hover:text-accent group-hover:bg-white/[0.04] transition-all">
+                                            <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                                        </div>
                                     </div>
 
                                     {/* Project Info */}

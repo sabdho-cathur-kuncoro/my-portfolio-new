@@ -7,6 +7,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 import RichTextEditor from '@/components/RichTextEditor';
 import ImageUpload from '@/components/ImageUpload';
+import ProjectIcon, { PROJECT_ICON_OPTIONS } from '@/components/ProjectIcon';
 
 export default function NewProjectPage() {
     const router = useRouter();
@@ -14,7 +15,7 @@ export default function NewProjectPage() {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        image: '🚀',
+        image: 'rocket',
         tags: '',
         github: '',
         demo: '',
@@ -83,101 +84,106 @@ export default function NewProjectPage() {
         { value: 'from-accent-purple to-accent-cyan', label: 'Purple to Cyan' },
     ];
 
-    const emojiOptions = ['🚀', '💻', '📱', '🎨', '⚡', '🔥', '✨', '🌟', '💡', '🎯', '👥', '📊'];
-
     return (
-        <div>
+        <div className="max-w-3xl">
             {/* Header */}
-            <div className="flex items-center gap-4 mb-8">
-                <Link href="/admin/projects">
-                    <motion.button
-                        className="p-2 glass rounded-lg hover:bg-white/10 transition-colors"
-                        whileHover={{ x: -5 }}
-                    >
-                        <ArrowLeft className="w-5 h-5" />
-                    </motion.button>
+            <div className="mb-10">
+                <Link
+                    href="/admin/projects"
+                    className="inline-flex items-center gap-1.5 font-mono text-xs text-muted hover:text-accent transition-colors mb-6"
+                >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    Back to Projects
                 </Link>
-                <div>
-                    <h1 className="text-3xl font-bold">New Project</h1>
-                    <p className="text-gray-400">Add a new project to your portfolio</p>
-                </div>
+                <p className="font-mono text-xs uppercase tracking-widest text-accent mb-3">New Entry</p>
+                <h1 className="text-3xl font-bold mb-1">New Project</h1>
+                <p className="text-muted text-sm">Add a new project to your portfolio.</p>
             </div>
 
             {/* Form */}
-            <div className="max-w-3xl">
-                <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+                <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Preview Card */}
-                    <div className="glass rounded-2xl overflow-hidden">
+                    <div className="surface rounded-xl overflow-hidden">
                         <div className={`h-32 bg-gradient-to-br ${formData.gradient} flex items-center justify-center`}>
-                            <span className="text-6xl">{formData.image}</span>
+                            <ProjectIcon name={formData.image} className="w-16 h-16 text-white drop-shadow-md" />
                         </div>
                     </div>
 
-                    <div className="glass rounded-2xl p-6 space-y-6">
+                    <div className="surface rounded-xl p-6 space-y-6">
                         {/* Title */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Project Title *</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Project Title *</label>
                             <input
                                 type="text"
                                 required
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                 placeholder="My Awesome Project"
                             />
                         </div>
 
                         {/* Description */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Description *</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Description *</label>
                             <RichTextEditor
                                 value={formData.description}
                                 onChange={(value) => setFormData({ ...formData, description: value })}
                                 placeholder="A comprehensive description of your project..."
                                 minHeight="150px"
                             />
-                            <p className="text-xs text-gray-400 mt-2">Use the toolbar to format text, add lists, and links</p>
+                            <p className="text-xs text-muted mt-2">Use the toolbar to format text, add lists, and links</p>
                         </div>
 
-                        {/* Emoji Icon */}
+                        {/* Icon Picker */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Icon *</label>
-                            <div className="grid grid-cols-6 gap-2">
-                                {emojiOptions.map((emoji) => (
-                                    <button
-                                        key={emoji}
-                                        type="button"
-                                        onClick={() => setFormData({ ...formData, image: emoji })}
-                                        className={`p-3 glass rounded-lg text-3xl hover:bg-white/10 transition-colors ${formData.image === emoji ? 'ring-2 ring-accent-purple' : ''
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Project Icon *</label>
+                            <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+                                {PROJECT_ICON_OPTIONS.map((option) => {
+                                    const IconComponent = option.icon;
+                                    const isSelected = formData.image === option.id;
+                                    return (
+                                        <button
+                                            key={option.id}
+                                            type="button"
+                                            title={option.label}
+                                            onClick={() => setFormData({ ...formData, image: option.id })}
+                                            className={`p-3 border border-white/10 rounded-lg flex flex-col items-center justify-center gap-1 hover:bg-white/10 transition-colors ${
+                                                isSelected
+                                                    ? 'ring-2 ring-accent bg-white/10 text-accent'
+                                                    : 'text-gray-300'
                                             }`}
-                                    >
-                                        {emoji}
-                                    </button>
-                                ))}
+                                        >
+                                            <IconComponent className="w-6 h-6" />
+                                            <span className="text-[10px] truncate max-w-full">{option.label}</span>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
 
                         {/* Tags */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Tags (comma-separated) *</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Tags (comma-separated) *</label>
                             <input
                                 type="text"
                                 required
                                 value={formData.tags}
                                 onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                 placeholder="React, TypeScript, Node.js"
                             />
-                            <p className="text-xs text-gray-400 mt-2">Separate tags with commas</p>
+                            <p className="text-xs text-muted mt-2">Separate tags with commas</p>
                         </div>
 
                         {/* Gradient */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Gradient Theme *</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Gradient Theme *</label>
                             <select
                                 value={formData.gradient}
                                 onChange={(e) => setFormData({ ...formData, gradient: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                             >
                                 {gradients.map((gradient) => (
                                     <option key={gradient.value} value={gradient.value}>
@@ -189,41 +195,41 @@ export default function NewProjectPage() {
 
                         {/* GitHub URL */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">GitHub URL</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">GitHub URL</label>
                             <input
                                 type="url"
                                 value={formData.github}
                                 onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                 placeholder="https://github.com/username/repo"
                             />
                         </div>
 
                         {/* Demo URL */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Demo URL or Slug *</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Demo URL or Slug *</label>
                             <input
                                 type="text"
                                 required
                                 value={formData.demo}
                                 onChange={(e) => setFormData({ ...formData, demo: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                 placeholder="/projects/my-project or https://demo.com"
                             />
                         </div>
                     </div>
 
                     {/* Enhanced Project Details */}
-                    <div className="glass rounded-2xl p-6 space-y-6">
-                        <h3 className="text-xl font-bold mb-4">Project Details</h3>
+                    <div className="surface rounded-xl p-6 space-y-6">
+                        <p className="font-mono text-[11px] uppercase tracking-widest text-muted">Project Details</p>
 
                         {/* Status */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Status</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Status</label>
                             <select
                                 value={formData.status}
                                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                             >
                                 <option value="completed">Completed</option>
                                 <option value="in-progress">In Progress</option>
@@ -235,58 +241,58 @@ export default function NewProjectPage() {
                         {/* Dates */}
                         <div className="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium mb-2">Start Date</label>
+                                <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Start Date</label>
                                 <input
                                     type="date"
                                     value={formData.start_date}
                                     onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                                    className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                    className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-2">End Date</label>
+                                <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">End Date</label>
                                 <input
                                     type="date"
                                     value={formData.end_date}
                                     onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                                    className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                    className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                 />
                             </div>
                         </div>
 
                         {/* Duration */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Duration</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Duration</label>
                             <input
                                 type="text"
                                 value={formData.duration}
                                 onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                 placeholder="3 months, 6 weeks, etc."
                             />
-                            <p className="text-xs text-gray-400 mt-2">Human-readable project duration</p>
+                            <p className="text-xs text-muted mt-2">Human-readable project duration</p>
                         </div>
 
                         {/* Team & Role */}
                         <div className="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium mb-2">Team Size</label>
+                                <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Team Size</label>
                                 <input
                                     type="number"
                                     min="1"
                                     value={formData.team_size}
                                     onChange={(e) => setFormData({ ...formData, team_size: e.target.value })}
-                                    className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                    className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                     placeholder="5"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-2">Your Role</label>
+                                <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Your Role</label>
                                 <input
                                     type="text"
                                     value={formData.role}
                                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                                    className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                    className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                     placeholder="Lead Developer, Full Stack Developer, etc."
                                 />
                             </div>
@@ -294,43 +300,43 @@ export default function NewProjectPage() {
 
                         {/* Client */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Client / Company</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Client / Company</label>
                             <input
                                 type="text"
                                 value={formData.client}
                                 onChange={(e) => setFormData({ ...formData, client: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                 placeholder="Company name or client"
                             />
                         </div>
 
                         {/* Features */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Key Features</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Key Features</label>
                             <textarea
                                 value={formData.features}
                                 onChange={(e) => setFormData({ ...formData, features: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5 min-h-[100px]"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all min-h-[100px]"
                                 placeholder="User authentication, Real-time chat, Payment integration"
                             />
-                            <p className="text-xs text-gray-400 mt-2">Separate features with commas</p>
+                            <p className="text-xs text-muted mt-2">Separate features with commas</p>
                         </div>
 
                         {/* Technologies */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Technologies Used</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Technologies Used</label>
                             <textarea
                                 value={formData.technologies}
                                 onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5 min-h-[100px]"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all min-h-[100px]"
                                 placeholder="React, Node.js, PostgreSQL, AWS"
                             />
-                            <p className="text-xs text-gray-400 mt-2">Detailed tech stack (separate with commas)</p>
+                            <p className="text-xs text-muted mt-2">Detailed tech stack (separate with commas)</p>
                         </div>
 
                         {/* Challenges */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Challenges & Solutions</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Challenges & Solutions</label>
                             <RichTextEditor
                                 value={formData.challenges}
                                 onChange={(value) => setFormData({ ...formData, challenges: value })}
@@ -341,7 +347,7 @@ export default function NewProjectPage() {
 
                         {/* Outcomes */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Outcomes & Results</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Outcomes & Results</label>
                             <RichTextEditor
                                 value={formData.outcomes}
                                 onChange={(value) => setFormData({ ...formData, outcomes: value })}
@@ -352,8 +358,8 @@ export default function NewProjectPage() {
                     </div>
 
                     {/* Media & Links */}
-                    <div className="glass rounded-2xl p-6 space-y-6">
-                        <h3 className="text-xl font-bold mb-4">Media</h3>
+                    <div className="surface rounded-xl p-6 space-y-6">
+                        <p className="font-mono text-[11px] uppercase tracking-widest text-muted">Media</p>
 
                         {/* Screenshots */}
                         <ImageUpload
@@ -366,8 +372,8 @@ export default function NewProjectPage() {
                     </div>
 
                     {/* Display Settings */}
-                    <div className="glass rounded-2xl p-6 space-y-6">
-                        <h3 className="text-xl font-bold mb-4">Display Settings</h3>
+                    <div className="surface rounded-xl p-6 space-y-6">
+                        <p className="font-mono text-[11px] uppercase tracking-widest text-muted">Display Settings</p>
 
                         {/* Featured */}
                         <div className="flex items-center gap-3">
@@ -376,7 +382,7 @@ export default function NewProjectPage() {
                                 id="is_featured"
                                 checked={formData.is_featured}
                                 onChange={(e) => setFormData({ ...formData, is_featured: e.target.checked })}
-                                className="w-5 h-5 rounded bg-white/5 border-gray-600 focus:ring-2 focus:ring-accent-purple"
+                                className="w-5 h-5 rounded bg-white/5 border-gray-600 focus:ring-2 focus:ring-accent"
                             />
                             <label htmlFor="is_featured" className="text-sm font-medium cursor-pointer">
                                 Featured Project (display on homepage)
@@ -385,16 +391,16 @@ export default function NewProjectPage() {
 
                         {/* Display Order */}
                         <div>
-                            <label className="block text-sm font-medium mb-2">Display Order</label>
+                            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Display Order</label>
                             <input
                                 type="number"
                                 min="0"
                                 value={formData.display_order}
                                 onChange={(e) => setFormData({ ...formData, display_order: e.target.value })}
-                                className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple bg-white/5"
+                                className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg focus:outline-none focus:border-accent/40 transition-all"
                                 placeholder="0"
                             />
-                            <p className="text-xs text-gray-400 mt-2">Lower numbers appear first</p>
+                            <p className="text-xs text-muted mt-2">Lower numbers appear first</p>
                         </div>
                     </div>
 
@@ -403,21 +409,19 @@ export default function NewProjectPage() {
                         <Link href="/admin/projects" className="flex-1">
                             <button
                                 type="button"
-                                className="w-full px-6 py-3 glass rounded-lg hover:bg-white/10 transition-colors"
+                                className="w-full px-6 py-2.5 border border-white/10 rounded-lg text-sm hover:bg-white/5 transition-colors"
                             >
                                 Cancel
                             </button>
                         </Link>
-                        <motion.button
+                        <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-cyber text-white rounded-lg hover:shadow-lg hover:shadow-accent-purple/50 transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
-                            whileHover={!isSubmitting ? { scale: 1.02 } : {}}
-                            whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                            className="flex-1 flex items-center justify-center gap-2 px-6 py-2.5 bg-accent text-background rounded-lg text-sm font-semibold hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <Save className="w-5 h-5" />
+                            <Save className="w-4 h-4" />
                             {isSubmitting ? 'Creating...' : 'Create Project'}
-                        </motion.button>
+                        </button>
                     </div>
                 </form>
             </div>
