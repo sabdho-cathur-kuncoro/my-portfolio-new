@@ -836,7 +836,7 @@ export default function About() {
                             <span className="text-foreground font-semibold">Flutter</span>,{' '}
                             <span className="text-foreground font-semibold">React</span>, and{' '}
                             <span className="text-foreground font-semibold">Next.js</span>. Over
-                            4+ years I&apos;ve built HR systems, ERP tools, and consumer apps —
+                            5+ years I&apos;ve built HR systems, ERP tools, and consumer apps —
                             covering UI architecture, API integration, and deployment.
                         </p>
                         <p>

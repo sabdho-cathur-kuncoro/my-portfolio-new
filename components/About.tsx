@@ -59,7 +59,7 @@ export default function About() {
                                 <span className="text-foreground font-semibold">Flutter</span>,{' '}
                                 <span className="text-foreground font-semibold">React</span>, and{' '}
                                 <span className="text-foreground font-semibold">Next.js</span>. Over
-                                4+ years I&apos;ve built HR systems, ERP tools, and consumer apps,
+                                5+ years I&apos;ve built HR systems, ERP tools, and consumer apps,
                                 covering UI architecture, API integration, and deployment.
                             </p>
                             <p>
@@ -82,7 +82,7 @@ export default function About() {
                             <div className="space-y-3 font-mono text-xs">
                                 <div>
                                     <span className="text-muted block mb-0.5">Experience</span>
-                                    <span className="text-foreground font-medium text-sm">4+ Years Front-End</span>
+                                    <span className="text-foreground font-medium text-sm">5+ Years Front-End</span>
                                 </div>
                                 <div className="border-t border-white/5 pt-2">
                                     <span className="text-muted block mb-0.5">Location &amp; Local Time</span>

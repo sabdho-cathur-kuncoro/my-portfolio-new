@@ -176,7 +176,7 @@ Borders use Tailwind's built-in `border-white/10` (not a new token).
   paragraphs:
 
   > "I'm a front-end developer based in Jakarta, working across React
-  > Native, Flutter, React, and Next.js. Over 4+ years I've built HR
+  > Native, Flutter, React, and Next.js. Over 5+ years I've built HR
   > systems, ERP tools, and consumer apps — covering UI architecture, API
   > integration, and deployment."
   >
